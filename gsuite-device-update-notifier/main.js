@@ -1,7 +1,7 @@
 // August 1st patch level
 var MINIMUM_ANDROID_VERSION = new Date(2019, 7, 1);
-var MINIMUM_IOS_VERSION = 12.4;
-var MINIMUM_CHROMEOS_VERSION = splitChromeOSVersion("76.0.3809.102");
+var MINIMUM_IOS_VERSION = splitOSVersion("12.4.1");
+var MINIMUM_CHROMEOS_VERSION = splitOSVersion("76.0.3809.102");
 
 function checkOutdatedMobileDevice(device) {
   if (device.type == "ANDROID") {
@@ -16,8 +16,8 @@ function checkOutdatedMobileDevice(device) {
     if (device.os == "") {
       return;
     }
-    var version = /iOS (\d+\.\d+)/.exec(device.os);
-    if (parseFloat(version[1]) < MINIMUM_IOS_VERSION) {
+    var version = /iOS ([\d\.]+)/.exec(device.os);
+    if (compareOSVersions(splitOSVersion(version[1]), MINIMUM_IOS_VERSION) < 0) {
       return {name: device.email[0], version: version[1]};
     }
   } else {
@@ -46,11 +46,11 @@ function getAllOutdatedMobileDevices(customerId) {
   return {totalDevices: totalDevices, results: results};
 }
 
-function splitChromeOSVersion(v) {
+function splitOSVersion(v) {
   return v.split(".").map(function(c) { return parseInt(c); });
 }
 
-function compareChromeOSVersions(v1, v2) {
+function compareOSVersions(v1, v2) {
   if (v1.length != v2.length) {
     return -1;
   }
@@ -66,8 +66,8 @@ function compareChromeOSVersions(v1, v2) {
 }
 
 function checkOutdatedChromeOSDevice(device) {
-  var version = splitChromeOSVersion(device.osVersion);
-  if (compareChromeOSVersions(version, MINIMUM_CHROMEOS_VERSION) < 0) {
+  var version = splitOSVersion(device.osVersion);
+  if (compareOSVersions(version, MINIMUM_CHROMEOS_VERSION) < 0) {
     return {name: device.annotatedUser, version: device.osVersion};
   }
 }
