@@ -1,5 +1,5 @@
 // August 1st patch level
-var MINIMUM_ANDROID_VERSION = new Date(2019, 7, 1);
+var MINIMUM_ANDROID_VERSION = new Date(2019, 8, 5);
 var MINIMUM_IOS_VERSION = splitOSVersion("12.4.1");
 var MINIMUM_CHROMEOS_VERSION = splitOSVersion("76.0.3809.102");
 
