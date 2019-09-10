@@ -51,17 +51,18 @@ function splitOSVersion(v) {
 }
 
 function compareOSVersions(v1, v2) {
-  if (v1.length != v2.length) {
-    return -1;
-  }
-
-  for (var i = 0; i < v1.length; i++) {
+  for (var i = 0; i < Math.min(v1.length, v2.length); i++) {
     if (v1[i] < v2[i]) {
       return -1;
     } else if (v1[i] > v2[i]) {
       return 1;
     }
   }
+
+  if (v1.length != v2.length) {
+    return -1;
+  }
+
   return 0;
 }
 
