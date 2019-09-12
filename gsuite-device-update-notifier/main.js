@@ -115,7 +115,7 @@ function main() {
 
   messageBody += "Found " + outdatedMobileDevices.totalDevices + " mobile devices.\n";
   if (outdatedMobileDevices.results.length > 0) {
-    messageBody += "Outdated mobile devices owned by:\n";
+    messageBody += outdatedMobileDevices.results.length + " outdated mobile devices owned by:\n";
     for (var i = 0; i < outdatedMobileDevices.results.length; i++) {
       if (outdatedMobileDevices.results[i].error) {
         errorBody += "- " + outdatedMobileDevices.results[i].error + "\n";
@@ -129,7 +129,7 @@ function main() {
 
   messageBody += "\nFound " + outdatedChromeOSDevices.totalDevices + " ChromeOS devices.\n";
   if (outdatedChromeOSDevices.results.length > 0) {
-    messageBody += "Outdated ChromeOS devices owned by:\n";
+    messageBody += outdatedChromeOSDevices.results.length + " outdated ChromeOS devices owned by:\n";
     for (var i = 0; i < outdatedChromeOSDevices.results.length; i++) {
       messageBody += "- " + outdatedChromeOSDevices.results[i].name + " (" + outdatedChromeOSDevices.results[i].version + ")\n";
     }
