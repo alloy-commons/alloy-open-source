@@ -10,3 +10,5 @@ them more useful to you, we'd be delighted to receive contributions.
 ## Projects
 
 - [GSuite Device Update Notifier](gsuite-device-update-notifier/README.md)
+- Terraform Modules:
+  - [Amazon Certificate Manager](terraform-modules/acm/README.md)
