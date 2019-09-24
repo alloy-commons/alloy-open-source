@@ -1,7 +1,12 @@
-// August 1st patch level
 var MINIMUM_ANDROID_VERSION = new Date(2019, 8, 5);
+var ANDROID_LAST_UPDATE = new Date(2019, 8, 3);
+
 var MINIMUM_IOS_VERSION = splitOSVersion("13.0");
+var IOS_LAST_UPDATE = new Date(2019, 8, 19);
+
 var MINIMUM_CHROMEOS_VERSION = splitOSVersion("76.0.3809.136");
+var CHROMEOS_LAST_UPDATE = new Date(2019, 8, 10);
+
 
 function checkOutdatedMobileDevice(device) {
   if (device.type == "ANDROID") {
@@ -104,6 +109,11 @@ function getCustomerId(exampleUser) {
   return userKey.customerId;
 }
 
+function daysSinceUpdated(description, lastUpdated) {
+  var days = Math.floor((new Date() - lastUpdated) / (1000 * 60 * 60 * 24));
+  return "It has been " + days + " days since " + description + " was updated.\n";
+}
+
 function buildBodyForDevices(devices, description) {
   var error = "";
   var message = "Found " + devices.totalDevices + " " + description + " devices.\n";
@@ -131,9 +141,13 @@ function main() {
   var messageBody = "";
   var errorBody = "";
 
+  messageBody += daysSinceUpdated("iOS", IOS_LAST_UPDATE);
+  messageBody += daysSinceUpdated("Android", ANDROID_LAST_UPDATE);
   var mobileBody = buildBodyForDevices(outdatedMobileDevices, "mobile");
   messageBody += mobileBody.message;
   errorBody += mobileBody.error;
+
+  messageBody += daysSinceUpdated("ChromeOS", CHROMEOS_LAST_UPDATE);
   var chromeOSBody = buildBodyForDevices(outdatedChromeOSDevices, "ChromeOS")
   messageBody += chromeOSBody.message;
   errorBody += chromeOSBody.error;
