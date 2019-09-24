@@ -104,6 +104,24 @@ function getCustomerId(exampleUser) {
   return userKey.customerId;
 }
 
+function buildBodyForDevices(devices, description) {
+  var error = "";
+  var message = "Found " + devices.totalDevices + " " + description + " devices.\n";
+  if (devices.results.length > 0) {
+    message += devices.results.length + " outdated " + description + " devices owned by:\n";
+    for (var i = 0; i < devices.results.length; i++) {
+      if (devices.results[i].error) {
+        error += "- " + devices.results[i].error + "\n";
+      } else {
+        message += "- " + devices.results[i].name + " (" + devices.results[i].version + ")\n";
+      }
+    }
+  } else {
+    message += "No outdated " + description + " devices\n";
+  }
+  return {message: message, error: error};
+}
+
 function main() {
   var scriptProperties = PropertiesService.getScriptProperties()
 
@@ -113,29 +131,12 @@ function main() {
   var messageBody = "";
   var errorBody = "";
 
-  messageBody += "Found " + outdatedMobileDevices.totalDevices + " mobile devices.\n";
-  if (outdatedMobileDevices.results.length > 0) {
-    messageBody += outdatedMobileDevices.results.length + " outdated mobile devices owned by:\n";
-    for (var i = 0; i < outdatedMobileDevices.results.length; i++) {
-      if (outdatedMobileDevices.results[i].error) {
-        errorBody += "- " + outdatedMobileDevices.results[i].error + "\n";
-      } else {
-        messageBody += "- " + outdatedMobileDevices.results[i].name + " (" + outdatedMobileDevices.results[i].version + ")\n";
-      }
-    }
-  } else {
-    messageBody += "No outdated mobile devices\n";
-  }
-
-  messageBody += "\nFound " + outdatedChromeOSDevices.totalDevices + " ChromeOS devices.\n";
-  if (outdatedChromeOSDevices.results.length > 0) {
-    messageBody += outdatedChromeOSDevices.results.length + " outdated ChromeOS devices owned by:\n";
-    for (var i = 0; i < outdatedChromeOSDevices.results.length; i++) {
-      messageBody += "- " + outdatedChromeOSDevices.results[i].name + " (" + outdatedChromeOSDevices.results[i].version + ")\n";
-    }
-  } else {
-    messageBody += "No outdated ChromeOS devices\n";
-  }
+  var mobileBody = buildBodyForDevices(outdatedMobileDevices, "mobile");
+  messageBody += mobileBody.message;
+  errorBody += mobileBody.error;
+  var chromeOSBody = buildBodyForDevices(outdatedChromeOSDevices, "ChromeOS")
+  messageBody += chromeOSBody.message;
+  errorBody += chromeOSBody.error;
 
   var recipients = JSON.parse(scriptProperties.getProperty("REPORT_RECIPIENTS"));
   MailApp.sendEmail({
