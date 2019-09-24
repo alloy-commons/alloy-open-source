@@ -1,7 +1,12 @@
-// August 1st patch level
 var MINIMUM_ANDROID_VERSION = new Date(2019, 8, 5);
+var ANDROID_LAST_UPDATE = new Date(2019, 8, 3);
+
 var MINIMUM_IOS_VERSION = splitOSVersion("13.0");
+var IOS_LAST_UPDATE = new Date(2019, 8, 19);
+
 var MINIMUM_CHROMEOS_VERSION = splitOSVersion("76.0.3809.136");
+var CHROMEOS_LAST_UPDATE = new Date(2019, 8, 10);
+
 
 function checkOutdatedMobileDevice(device) {
   if (device.type == "ANDROID") {
@@ -104,6 +109,29 @@ function getCustomerId(exampleUser) {
   return userKey.customerId;
 }
 
+function daysSinceUpdated(description, lastUpdated) {
+  var days = Math.floor((new Date() - lastUpdated) / (1000 * 60 * 60 * 24));
+  return "It has been " + days + " days since " + description + " was updated.\n";
+}
+
+function buildBodyForDevices(devices, description) {
+  var error = "";
+  var message = "Found " + devices.totalDevices + " " + description + " devices.\n";
+  if (devices.results.length > 0) {
+    message += devices.results.length + " outdated " + description + " devices owned by:\n";
+    for (var i = 0; i < devices.results.length; i++) {
+      if (devices.results[i].error) {
+        error += "- " + devices.results[i].error + "\n";
+      } else {
+        message += "- " + devices.results[i].name + " (" + devices.results[i].version + ")\n";
+      }
+    }
+  } else {
+    message += "No outdated " + description + " devices\n";
+  }
+  return {message: message, error: error};
+}
+
 function main() {
   var scriptProperties = PropertiesService.getScriptProperties()
 
@@ -113,29 +141,16 @@ function main() {
   var messageBody = "";
   var errorBody = "";
 
-  messageBody += "Found " + outdatedMobileDevices.totalDevices + " mobile devices.\n";
-  if (outdatedMobileDevices.results.length > 0) {
-    messageBody += outdatedMobileDevices.results.length + " outdated mobile devices owned by:\n";
-    for (var i = 0; i < outdatedMobileDevices.results.length; i++) {
-      if (outdatedMobileDevices.results[i].error) {
-        errorBody += "- " + outdatedMobileDevices.results[i].error + "\n";
-      } else {
-        messageBody += "- " + outdatedMobileDevices.results[i].name + " (" + outdatedMobileDevices.results[i].version + ")\n";
-      }
-    }
-  } else {
-    messageBody += "No outdated mobile devices\n";
-  }
+  messageBody += daysSinceUpdated("iOS", IOS_LAST_UPDATE);
+  messageBody += daysSinceUpdated("Android", ANDROID_LAST_UPDATE);
+  var mobileBody = buildBodyForDevices(outdatedMobileDevices, "mobile");
+  messageBody += mobileBody.message;
+  errorBody += mobileBody.error;
 
-  messageBody += "\nFound " + outdatedChromeOSDevices.totalDevices + " ChromeOS devices.\n";
-  if (outdatedChromeOSDevices.results.length > 0) {
-    messageBody += outdatedChromeOSDevices.results.length + " outdated ChromeOS devices owned by:\n";
-    for (var i = 0; i < outdatedChromeOSDevices.results.length; i++) {
-      messageBody += "- " + outdatedChromeOSDevices.results[i].name + " (" + outdatedChromeOSDevices.results[i].version + ")\n";
-    }
-  } else {
-    messageBody += "No outdated ChromeOS devices\n";
-  }
+  messageBody += daysSinceUpdated("ChromeOS", CHROMEOS_LAST_UPDATE);
+  var chromeOSBody = buildBodyForDevices(outdatedChromeOSDevices, "ChromeOS")
+  messageBody += chromeOSBody.message;
+  errorBody += chromeOSBody.error;
 
   var recipients = JSON.parse(scriptProperties.getProperty("REPORT_RECIPIENTS"));
   MailApp.sendEmail({
