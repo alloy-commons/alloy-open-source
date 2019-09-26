@@ -1,8 +1,9 @@
 # GSuite Device Update Notifier
 
 This is a [Google Script](https://script.google.com) for a GSuite organization
-which notifies you about the update state of mobile phones (iOS and Android)
-and ChromeOS devices in your oganization.
+which notifies administrators about the update state of mobile phones (iOS and
+Android) and ChromeOS devices in your oganization. It can also directly notify
+users that they need to update.
 
 This helps ensure users are patching devices!
 
@@ -25,7 +26,8 @@ need to check back to get these updates, or update the script yourself.
   `REPORT_RECIPIENTS` with a value containing a JSON list of email address for
   people who should receive the report (e.g.
   `["you@your-organization.com", "someone-else@your-organization.com"]`). And
-  press Save.
+  press Save. If you'd like users to receive emails when they have out of date
+  devices create a property named `NOTIFY_USERS` set to `true`.
 - Open the Resources menu, select Advanced Google Services, and enable the
   Admin Directory Service.
 - Optionally, configure the script to be run on a regular schedule (e.g. daily)
