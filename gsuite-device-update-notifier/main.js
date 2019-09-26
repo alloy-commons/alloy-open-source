@@ -7,6 +7,37 @@ var IOS_LAST_UPDATE = new Date(2019, 8, 24);
 var MINIMUM_CHROMEOS_VERSION = splitOSVersion("77.0.3865.93");
 var CHROMEOS_LAST_UPDATE = new Date(2019, 8, 25);
 
+var ANDROID_OUTDATED_MESSAGE = "\
+Hello,\n\
+\n\
+It appears that you have an out of date Android on your device.\n\
+\n\
+To update, follow the instructions here: https://support.google.com/android/answer/7680439\n\
+\n\
+Remember that keeping your devices up to date is important for our security.\n\
+\n\
+Thanks!";
+var IOS_OUTDATED_MESSAGE = "\
+Hello,\n\
+\n\
+It appears that you have an out of date iOS on your device.\n\
+\n\
+To update, follow the instructions here: https://support.apple.com/en-us/HT204204\n\
+\n\
+Remember that keeping your devices up to date is important for our security.\n\
+\n\
+Thanks!";
+var CHROMEOS_OUTDATED_MESSAGE = "\
+Hello,\n\
+\n\
+It appears that you have an out of date ChromeOS on your device.\n\
+\n\
+To update, follow the instructions here: https://support.google.com/chromebook/answer/177889\n\
+\n\
+Remember that keeping your devices up to date is important for our security.\n\
+\n\
+Thanks!";
+
 
 function checkOutdatedMobileDevice(device) {
   if (device.type == "ANDROID") {
@@ -15,7 +46,7 @@ function checkOutdatedMobileDevice(device) {
     }
     var version = new Date(parseFloat(device.securityPatchLevel));
     if (version < MINIMUM_ANDROID_VERSION) {
-      return {name: device.email[0], version: version};
+      return {name: device.email[0], version: version, type: "Android"};
     }
   } else if (device.type == "IOS_SYNC") {
     if (device.os == "") {
@@ -23,7 +54,7 @@ function checkOutdatedMobileDevice(device) {
     }
     var version = /iOS ([\d\.]+)/.exec(device.os);
     if (compareOSVersions(splitOSVersion(version[1]), MINIMUM_IOS_VERSION) < 0) {
-      return {name: device.email[0], version: version[1]};
+      return {name: device.email[0], version: version[1], type: "iOS"};
     }
   } else {
     return {error: "Unexpected type: " + device.type};
@@ -74,7 +105,7 @@ function compareOSVersions(v1, v2) {
 function checkOutdatedChromeOSDevice(device) {
   var version = splitOSVersion(device.osVersion);
   if (compareOSVersions(version, MINIMUM_CHROMEOS_VERSION) < 0) {
-    return {name: device.annotatedUser, version: device.osVersion};
+    return {name: device.annotatedUser, version: device.osVersion, type: "ChromeOS"};
   }
 }
 
@@ -132,6 +163,33 @@ function buildBodyForDevices(devices, description) {
   return {message: message, error: error};
 }
 
+function emailOutdatedUsers(devices) {
+  for (var i = 0; i < devices.results.length; i++) {
+    if (devices.results[i].error) {
+      continue;
+    }
+
+    var message;
+    switch (devices.results[i].type) {
+      case "iOS":
+        message = IOS_OUTDATED_MESSAGE;
+        break;
+      case "Android":
+        message = ANDROID_OUTDATED_MESSAGE;
+        break;
+      case "ChromeOS":
+        message = CHROMEOS_OUTDATED_MESSAGE;
+        break;
+    }
+
+    MailApp.sendEmail({
+      to: devices.results[i].name,
+      subject: "Outdated " + devices.results[i].type,
+      body: message
+    });
+  }
+}
+
 function main() {
   var scriptProperties = PropertiesService.getScriptProperties()
 
@@ -146,6 +204,7 @@ function main() {
   var mobileBody = buildBodyForDevices(outdatedMobileDevices, "mobile");
   messageBody += mobileBody.message;
   errorBody += mobileBody.error;
+  messageBody += "\n";
 
   messageBody += daysSinceUpdated("ChromeOS", CHROMEOS_LAST_UPDATE);
   var chromeOSBody = buildBodyForDevices(outdatedChromeOSDevices, "ChromeOS")
@@ -159,4 +218,10 @@ function main() {
     subject: "Device OS report",
     body: messageBody + errorBody
   });
+
+  var notifyUsers = JSON.parse(scriptProperties.getProperty("NOTIFY_USERS"));
+  if (notifyUsers) {
+    emailOutdatedUsers(outdatedMobileDevices);
+    emailOutdatedUsers(outdatedChromeOSDevices);
+  }
 }
