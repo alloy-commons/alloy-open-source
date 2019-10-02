@@ -95,8 +95,10 @@ function compareOSVersions(v1, v2) {
     }
   }
 
-  if (v1.length != v2.length) {
+  if (v1.length < v2.length) {
     return -1;
+  } else if (v1.length > v2.length) {
+    return 1;
   }
 
   return 0;
