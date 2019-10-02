@@ -1,8 +1,8 @@
 var MINIMUM_ANDROID_VERSION = new Date(2019, 8, 5);
 var ANDROID_LAST_UPDATE = new Date(2019, 8, 3);
 
-var MINIMUM_IOS_VERSION = splitOSVersion("13.1");
-var IOS_LAST_UPDATE = new Date(2019, 8, 24);
+var MINIMUM_IOS_VERSION = splitOSVersion("13.1.2");
+var IOS_LAST_UPDATE = new Date(2019, 8, 30);
 
 var MINIMUM_CHROMEOS_VERSION = splitOSVersion("77.0.3865.93");
 var CHROMEOS_LAST_UPDATE = new Date(2019, 8, 25);
