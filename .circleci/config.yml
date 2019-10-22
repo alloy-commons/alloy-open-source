@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  deploy:
+    docker:
+      - image: circleci/python:3.7-stretch
+    working_directory: lambdas/ecs-events-to-slack
+    steps:
+      - checkout
+      - run:
+          name: Add python script to archive
+          command: zip -g notify.zip notify.py
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli
+      - run:
+          name: Deploy to S3
+          command: aws s3 sync notify.zip s3://alloy-public/lambdas/ecs-events-to-slack/ --delete
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: lambda-evs-events
