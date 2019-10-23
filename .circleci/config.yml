@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Deploy version to S3
           command: |
-            version=$(cat VERSION)
+            version=$(cat lambdas/ecs-events-to-slack/VERSION)
             mv lambdas/ecs-events-to-slack/notify.zip notify-${version}.zip
             aws s3 sync notify-${version}.zip s3://alloy-public/lambdas/ecs-events-to-slack/
 
