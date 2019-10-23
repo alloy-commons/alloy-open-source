@@ -27,7 +27,7 @@ jobs:
           command: |
             version=$(cat lambdas/ecs-events-to-slack/VERSION)
             mv lambdas/ecs-events-to-slack/notify.zip notify-${version}.zip
-            aws s3 sync notify-${version}.zip s3://alloy-public/lambdas/ecs-events-to-slack/
+            aws s3 cp notify-${version}.zip s3://alloy-public/lambdas/ecs-events-to-slack/
 
 workflows:
   version: 2
