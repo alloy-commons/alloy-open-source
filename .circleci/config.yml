@@ -40,4 +40,4 @@ workflows:
               - ecs-events-to-slack-linter
           filters:
             branches:
-              only: lambda-ecs-events
+              only: master
