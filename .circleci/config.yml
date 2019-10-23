@@ -33,11 +33,11 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - ecs-events-to-slack-linter:
-          filters:
-            branches:
-              only: lambda-ecs-events
+      - ecs-events-to-slack-linter
       - ecs-events-to-slack-deploy:
+          context: alloy-public-deployer-credentials
+          requires:
+              - ecs-events-to-slack-linter
           filters:
             branches:
               only: lambda-ecs-events
