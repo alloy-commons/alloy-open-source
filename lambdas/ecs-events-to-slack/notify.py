@@ -5,6 +5,7 @@ from dateutil.parser import parse
 from botocore.exceptions import ClientError
 import os
 
+
 def message_formatter(event, region):
     message_color = "warning"
 
@@ -23,11 +24,13 @@ def message_formatter(event, region):
     env_vars = event_detail["overrides"]["containerOverrides"][0]["environment"]
     env_vars_list = []
     for env_var in env_vars:
-        env_var_formatted = "%s=\"%s\"" %(env_var["name"], env_var["value"])
+        env_var_formatted = "%s=\"%s\""
+        % (env_var["name"], env_var["value"])
         env_vars_list.append(env_var_formatted)
     env_vars_formatted = "\n".join(env_vars_list)
 
-    logs_url = "https://%s.console.aws.amazon.com/cloudwatch/home?region=%s#logEventViewer:group=%s;stream=ecs/%s/%s" %(region, region, container_name, container_name, task_id)
+    logs_url = "https://%s.console.aws.amazon.com/cloudwatch/home?region=%s#logEventViewer:group=%s;stream=ecs/%s/%s"
+    % (region, region, container_name, container_name, task_id)
 
     container_status = event_detail["containers"][0]["lastStatus"]
     if "RUNNING" in container_status:
@@ -35,7 +38,8 @@ def message_formatter(event, region):
 
     if "exitCode" in event_detail["containers"][0]:
         container_exit = event_detail["containers"][0]["exitCode"]
-        container_status = "%s with exit code %s" %(container_status, container_exit)
+        container_status = "%s with exit code %s"
+        % (container_status, container_exit)
         if int(container_exit) == 0:
             message_color = "good"
         else:
@@ -44,7 +48,7 @@ def message_formatter(event, region):
     attachment = {
         "attachments": [
             {
-                "title": "%s is %s" %(container_name, container_status),
+                "title": "%s is %s" % (container_name, container_status),
                 "fields": [
                     {
                         "title": "Environment Variables",
@@ -65,12 +69,14 @@ def message_formatter(event, region):
                     }
                 ],
                 "color": message_color,
-                "footer": "Event id: %s (version: %s at %s)" %(event_id, version, formatted_time),
+                "footer": "Event id: %s (version: %s at %s)"
+                % (event_id, version, formatted_time),
             }
         ]
     }
 
     return attachment
+
 
 def get_secret(secret_name, region):
     session = boto3.session.Session()
@@ -85,7 +91,8 @@ def get_secret(secret_name, region):
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "DecryptionFailureException":
-            print("Secrets Manager can't decrypt the protected secret text using the provided KMS key:", e)
+            print("""Secrets Manager can't decrypt the protected secret text
+            using the provided KMS key:""", e)
             raise e
         elif e.response["Error"]["Code"] == "InternalServiceErrorException":
             print("An error occurred on the server:", e)
@@ -102,23 +109,29 @@ def get_secret(secret_name, region):
     else:
         return get_secret_value_response["SecretString"]
 
+
 def send_notification(message, region):
     secretmanager_secret_name = os.environ["SECRETMANAGER_SECRET_NAME"]
     if secretmanager_secret_name is None:
-        print("Environment Variable SECRETMANAGER_SECRET_NAME must be set")
+        slack_webhook_url = os.environ["SLACK_WEBHOOK_URL"]
+    else:
+        slack_webhook_url = get_secret(secretmanager_secret_name, region)
 
-    slack_webhook_url = get_secret(secretmanager_secret_name, region)
     if slack_webhook_url is None:
-        print("An error occured when retriving the secret from secret manager")
+        print("""Slack webhook url is not set. This means that
+        SLACK_WEBHOOK_URL environment variable is not set or an error occured
+        when retriving the secret from secret manager""")
 
     req_data = json.dumps(message)
     req_headers = {"Content-type": "application/json"}
 
-    req = requests.post(url=slack_webhook_url, headers=req_headers, data=req_data)
+    req = requests.post(url=slack_webhook_url, headers=req_headers,
+                        data=req_data)
     if response:
         print("Message successfully posted to Slack")
     else:
         print("An error has occurred while attempting to post to Slack")
+
 
 def lambda_handler(event, context):
     print(json.dumps(event))
