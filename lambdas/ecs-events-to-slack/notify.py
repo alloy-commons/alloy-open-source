@@ -1,9 +1,9 @@
-import json
 import boto3
-import requests
-from dateutil.parser import parse
 from botocore.exceptions import ClientError
+from dateutil.parser import parse
+import json
 import os
+import requests
 
 
 def message_formatter(event, region):
@@ -105,6 +105,9 @@ def get_secret(secret_name, region):
             raise e
         elif e.response["Error"]["Code"] == "ResourceNotFoundException":
             print("The requested secret " + secret_name + " was not found")
+            raise e
+        else:
+            print("An error occurred:", e)
             raise e
     else:
         return get_secret_value_response["SecretString"]
