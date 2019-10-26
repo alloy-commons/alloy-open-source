@@ -29,8 +29,8 @@ def message_formatter(event, region):
         env_vars_list.append(env_var_formatted)
     env_vars_formatted = "\n".join(env_vars_list)
 
-    logs_url = "https://%s.console.aws.amazon.com/cloudwatch/home?region=%s#logEventViewer:group=%s;stream=ecs/%s/%s"
-    % (region, region, container_name, container_name, task_id)
+    logs_url = """https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}
+    #logEventViewer:group={cn};stream=ecs/{cn}/{tid}""".format(reg=region, cn=container_name, tid=task_id)
 
     container_status = event_detail["containers"][0]["lastStatus"]
     if "RUNNING" in container_status:
