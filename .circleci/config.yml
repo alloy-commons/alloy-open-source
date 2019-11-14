@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  ecs-events-to-slack-linter:
+    docker:
+      - image: circleci/python:2.7-stretch
+    steps:
+      - checkout
+      - run:
+          name: Install python linter
+          command: sudo pip install pycodestyle
+      - run:
+          name: Lint
+          command: pycodestyle --max-line-length=120 lambdas/ecs-events-to-slack/notify.py
+  ecs-events-to-slack-deploy:
+    docker:
+      - image: circleci/python:2.7-stretch
+    steps:
+      - checkout
+      - run:
+          name: Add python script to archive
+          command: zip -g lambdas/ecs-events-to-slack/notify.zip lambdas/ecs-events-to-slack/notify.py
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli
+      - run:
+          name: Deploy version to S3
+          command: |
+            version=$(cat lambdas/ecs-events-to-slack/VERSION)
+            mv lambdas/ecs-events-to-slack/notify.zip notify-${version}.zip
+            aws s3 cp notify-${version}.zip s3://alloy-public/lambdas/ecs-events-to-slack/
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - ecs-events-to-slack-linter
+      - ecs-events-to-slack-deploy:
+          context: alloy-public-deployer-credentials
+          requires:
+              - ecs-events-to-slack-linter
+          filters:
+            branches:
+              only: master
