@@ -33,7 +33,7 @@ def message_formatter(event, region):
         else:
             env_var_formatted = "%s=\"%s\""
             % (env_var["name"], env_var["value"])
-            env_vars_list.append(env_var_formatted)
+        env_vars_list.append(env_var_formatted)
     env_vars_formatted = "\n".join(env_vars_list)
 
     logs_url = """https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}
