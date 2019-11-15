@@ -22,11 +22,18 @@ def message_formatter(event, region):
     attachment_status = event_detail["attachments"][0]["status"]
 
     env_vars = event_detail["overrides"]["containerOverrides"][0]["environment"]
+    excludes = {}
+    if "ENV_EXCLUDES" in os.environ:
+        excludes = os.environ["ENV_EXCLUDES"].replace(" ", "").split(",")
     env_vars_list = []
     for env_var in env_vars:
-        env_var_formatted = "%s=\"%s\""
-        % (env_var["name"], env_var["value"])
-        env_vars_list.append(env_var_formatted)
+        if env_var["name"] in excludes:
+            env_var_formatted = "%s=\"%s\""
+            % (env_var["name"], "REDACTED")
+        else:
+            env_var_formatted = "%s=\"%s\""
+            % (env_var["name"], env_var["value"])
+            env_vars_list.append(env_var_formatted)
     env_vars_formatted = "\n".join(env_vars_list)
 
     logs_url = """https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}
