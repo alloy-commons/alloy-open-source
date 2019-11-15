@@ -1,9 +1,10 @@
-import boto3
-from botocore.exceptions import ClientError
-from dateutil.parser import parse
 import json
 import os
+
+import boto3
 import requests
+from botocore.exceptions import ClientError
+from dateutil.parser import parse
 
 
 def message_formatter(event, region):
@@ -22,17 +23,15 @@ def message_formatter(event, region):
     attachment_status = event_detail["attachments"][0]["status"]
 
     env_vars = event_detail["overrides"]["containerOverrides"][0]["environment"]
-    excludes = {}
+    excludes = []
     if "ENV_EXCLUDES" in os.environ:
         excludes = os.environ["ENV_EXCLUDES"].replace(" ", "").split(",")
     env_vars_list = []
     for env_var in env_vars:
         if env_var["name"] in excludes:
-            env_var_formatted = "%s=\"%s\""
-            % (env_var["name"], "REDACTED")
+            env_var_formatted = "%s=REDACTED" % env_var["name"]
         else:
-            env_var_formatted = "%s=\"%s\""
-            % (env_var["name"], env_var["value"])
+            env_var_formatted = "%s=\"%s\"" % (env_var["name"], env_var["value"])
         env_vars_list.append(env_var_formatted)
     env_vars_formatted = "\n".join(env_vars_list)
 
@@ -45,8 +44,7 @@ def message_formatter(event, region):
 
     if "exitCode" in event_detail["containers"][0]:
         container_exit = event_detail["containers"][0]["exitCode"]
-        container_status = "%s with exit code %s"
-        % (container_status, container_exit)
+        container_status = "%s with exit code %s" % (container_status, container_exit)
         if int(container_exit) == 0:
             message_color = "good"
         else:
@@ -70,14 +68,14 @@ def message_formatter(event, region):
                 ],
                 "actions": [
                     {
-                      "type": "button",
-                      "text": "Logs",
-                      "url": logs_url
+                        "type": "button",
+                        "text": "Logs",
+                        "url": logs_url
                     }
                 ],
                 "color": message_color,
                 "footer": "Event id: %s (version: %s at %s)"
-                % (event_id, version, formatted_time),
+                          % (event_id, version, formatted_time),
             }
         ]
     }
@@ -135,8 +133,8 @@ def send_notification(message, region):
     req_data = json.dumps(message)
     req_headers = {"Content-type": "application/json"}
 
-    req = requests.post(url=slack_webhook_url, headers=req_headers,
-                        data=req_data)
+    response = requests.post(url=slack_webhook_url, headers=req_headers,
+                             data=req_data)
     if response:
         print("Message successfully posted to Slack")
     else:
