@@ -73,14 +73,13 @@ def message_formatter(event, region):
                 ],
                 "actions": [
                     {
-                        "type": "button",
-                        "text": "Logs",
-                        "url": logs_url
+                      "type": "button",
+                      "text": "Logs",
+                      "url": logs_url
                     }
                 ],
                 "color": message_color,
-                "footer": "Event id: %s (version: %s at %s)"
-                          % (event_id, version, formatted_time),
+                "footer": "Event id: %s (version: %s at %s)" % (event_id, version, formatted_time),
             }
         ]
     }
