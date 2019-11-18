@@ -7,6 +7,13 @@ from botocore.exceptions import ClientError
 from dateutil.parser import parse
 
 
+def get_excludes():
+    if "ENV_EXCLUDES" in os.environ:
+        return os.environ["ENV_EXCLUDES"].replace(" ", "").split(",")
+    else:
+        return []
+
+
 def message_formatter(event, region):
     message_color = "warning"
 
@@ -23,13 +30,11 @@ def message_formatter(event, region):
     attachment_status = event_detail["attachments"][0]["status"]
 
     env_vars = event_detail["overrides"]["containerOverrides"][0]["environment"]
-    excludes = []
-    if "ENV_EXCLUDES" in os.environ:
-        excludes = os.environ["ENV_EXCLUDES"].replace(" ", "").split(",")
+    excludes = get_excludes()
     env_vars_list = []
     for env_var in env_vars:
         if env_var["name"] in excludes:
-            env_var_formatted = "%s=REDACTED" % env_var["name"]
+            env_var_formatted = "%s=\"REDACTED\"" % env_var["name"]
         else:
             env_var_formatted = "%s=\"%s\"" % (env_var["name"], env_var["value"])
         env_vars_list.append(env_var_formatted)
