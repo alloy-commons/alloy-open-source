@@ -40,8 +40,7 @@ def message_formatter(event, region):
         env_vars_list.append(env_var_formatted)
     env_vars_formatted = "\n".join(env_vars_list)
 
-    logs_url = """https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}
-    #logEventViewer:group={cn};stream=ecs/{cn}/{tid}""".format(reg=region, cn=container_name, tid=task_id)
+    logs_url = "https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}#logEventViewer:group={cn};stream=ecs/{cn}/{tid}".format(reg=region, cn=container_name, tid=task_id)
 
     container_status = event_detail["containers"][0]["lastStatus"]
     if "RUNNING" in container_status:
@@ -73,9 +72,9 @@ def message_formatter(event, region):
                 ],
                 "actions": [
                     {
-                      "type": "button",
-                      "text": "Logs",
-                      "url": logs_url
+                        "type": "button",
+                        "text": "Logs",
+                        "url": logs_url
                     }
                 ],
                 "color": message_color,
@@ -152,3 +151,113 @@ def lambda_handler(event, context):
 
     message = message_formatter(event, region)
     send_notification(message, region)
+
+
+test_message = {
+    "account": "667471847564",
+    "region": "us-east-2",
+    "detail": {
+        "launchType": "FARGATE",
+        "attachments": [
+            {
+                "status": "ATTACHED",
+                "type": "eni",
+                "id": "15613f8b-6dc1-4f3d-81b8-b4bc2c2e3a41",
+                "details": [
+                    {
+                        "name": "subnetId",
+                        "value": "subnet-0ef3692db124f204f"
+                    },
+                    {
+                        "name": "networkInterfaceId",
+                        "value": "eni-0c52462a536c2d40c"
+                    },
+                    {
+                        "name": "macAddress",
+                        "value": "06:83:93:f2:9c:84"
+                    },
+                    {
+                        "name": "privateIPv4Address",
+                        "value": "10.0.3.104"
+                    }
+                ]
+            }
+        ],
+        "stoppingAt": "2019-11-19T21:13:34.795Z",
+        "clusterArn": "arn:aws:ecs:us-east-2:667471847564:cluster/primary-cluster",
+        "updatedAt": "2019-11-19T21:13:34.795Z",
+        "desiredStatus": "STOPPED",
+        "createdAt": "2019-11-19T20:38:07.789Z",
+        "taskArn": "arn:aws:ecs:us-east-2:667471847564:task/e9511a82-9247-4239-89e9-ffd548ed9ee4",
+        "group": "family:voterintake",
+        "pullStartedAt": "2019-11-19T20:38:24.975Z",
+        "version": 4,
+        "stopCode": "EssentialContainerExited",
+        "connectivityAt": "2019-11-19T20:38:12.433Z",
+        "startedAt": "2019-11-19T20:38:27.975Z",
+        "taskDefinitionArn": "arn:aws:ecs:us-east-2:667471847564:task-definition/voterintake:11",
+        "containers": [
+            {
+                "containerArn": "arn:aws:ecs:us-east-2:667471847564:container/5abd8bf1-85db-4f66-a998-ad405f405bc4",
+                "taskArn": "arn:aws:ecs:us-east-2:667471847564:task/e9511a82-9247-4239-89e9-ffd548ed9ee4",
+                "name": "voterintake",
+                "lastStatus": "STOPPED",
+                "image": "667471847564.dkr.ecr.us-east-2.amazonaws.com/voterintake",
+                "imageDigest": "sha256:7110eb6305145e51da2c7242f43b0db24866d036a5871cde0e3169c6f10bf72c",
+                "runtimeId": "f5c93e14ca2eca383361d2599eeb6d5574254640db87175f3b2c593a610053bd",
+                "networkInterfaces": [
+                    {
+                        "privateIpv4Address": "10.0.3.104",
+                        "attachmentId": "15613f8b-6dc1-4f3d-81b8-b4bc2c2e3a41"
+                    }
+                ],
+                "cpu": "0",
+                "exitCode": 0
+            }
+        ],
+        "executionStoppedAt": "2019-11-19T21:13:24Z",
+        "memory": "12288",
+        "lastStatus": "DEPROVISIONING",
+        "connectivity": "CONNECTED",
+        "platformVersion": "1.3.0",
+        "overrides": {
+            "containerOverrides": [
+                {
+                    "environment": [
+                        {
+                            "name": "VOTERINTAKE_OP",
+                            "value": "convert-and-load"
+                        },
+                        {
+                            "name": "VOTERINTAKE_STATE",
+                            "value": "OH"
+                        },
+                        {
+                            "name": "VOTERINTAKE_DATE",
+                            "value": "20191109"
+                        },
+                        {
+                            "name": "TMPDIR",
+                            "value": "/data"
+                        }
+                    ],
+                    "name": "voterintake"
+                }
+            ]
+        },
+        "pullStoppedAt": "2019-11-19T20:38:27.975Z",
+        "stoppedReason": "Essential container in task exited",
+        "cpu": "4096"
+    },
+    "detail-type": "ECS Task State Change",
+    "source": "aws.ecs",
+    "version": "0",
+    "time": "2019-11-19T21:13:34Z",
+    "id": "a87af632-7491-ac52-5953-9835d6813176",
+    "resources": [
+        "arn:aws:ecs:us-east-2:667471847564:task/e9511a82-9247-4239-89e9-ffd548ed9ee4"
+    ]
+}
+
+message = message_formatter(test_message, "us-east-2")
+print message
