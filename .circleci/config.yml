@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run:
           name: Add python script to archive
-          command: zip -g lambdas/ecs-events-to-slack/notify.zip lambdas/ecs-events-to-slack/notify.py
+          command: cd lambdas/ecs-events-to-slack && zip -g notify.zip notify.py
       - run:
           name: Install awscli
           command: sudo pip install awscli
