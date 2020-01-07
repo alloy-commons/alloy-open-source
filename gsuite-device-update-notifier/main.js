@@ -1,5 +1,5 @@
-var MINIMUM_ANDROID_VERSION = new Date(2019, 11, 5);
-var ANDROID_LAST_UPDATE = new Date(2019, 11, 10);
+var MINIMUM_ANDROID_VERSION = new Date(2020, 0, 1);
+var ANDROID_LAST_UPDATE = new Date(2020, 0, 7);
 
 var MINIMUM_IOS_VERSION = splitOSVersion("13.3");
 var IOS_LAST_UPDATE = new Date(2019, 11, 10);
