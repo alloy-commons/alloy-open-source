@@ -12,3 +12,4 @@ them more useful to you, we'd be delighted to receive contributions.
 - [GSuite Device Update Notifier](gsuite-device-update-notifier/README.md)
 - Terraform Modules:
   - [Amazon Certificate Manager](terraform-modules/acm/README.md)
+  - [GSuite SAML Cognito](terraform-modules/gsuite-saml-cognito/README.md)
