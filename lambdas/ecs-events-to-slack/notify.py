@@ -68,7 +68,7 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
                     },
                     {
                         "title": "Image Digest",
-                        "value": event_details["containers"][0]["imageDigest"],
+                        "value": event_detail["containers"][0]["imageDigest"],
                         "short": "true",
                     },
                     {
