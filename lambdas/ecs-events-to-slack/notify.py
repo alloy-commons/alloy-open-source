@@ -79,6 +79,12 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
             "value": event_detail["containers"][0]["imageDigest"],
             "short": "true",
         })
+    if event_detail.get("stoppedReason"):
+        attachment_fields.append({
+            "title": "Stopped Reason",
+            "value": event_detail["stoppedReason"],
+            "short": "true",
+        })
     attachment = {
         "attachments": [
             {
