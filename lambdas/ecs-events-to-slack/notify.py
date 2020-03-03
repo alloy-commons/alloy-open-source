@@ -61,27 +61,29 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
         else:
             message_color = "danger"
 
+    attachment_fields = [
+        {
+            "title": "Environment Variables",
+            "value": env_vars_formatted,
+            "short": "true"
+        },
+        {
+            "title": "Networking Status",
+            "value": attachment_status,
+            "short": "true"
+        },
+    ]
+    if event_detail["containers"][0].get("imageDigest"):
+        attachment_fields.append({
+            "title": "Image Digest",
+            "value": event_detail["containers"][0]["imageDigest"],
+            "short": "true",
+        })
     attachment = {
         "attachments": [
             {
                 "title": "%s is %s" % (container_name, container_status),
-                "fields": [
-                    {
-                        "title": "Environment Variables",
-                        "value": env_vars_formatted,
-                        "short": "true"
-                    },
-                    {
-                        "title": "Image Digest",
-                        "value": event_detail["containers"][0]["imageDigest"],
-                        "short": "true",
-                    },
-                    {
-                        "title": "Networking Status",
-                        "value": attachment_status,
-                        "short": "true"
-                    },
-                ],
+                "fields": attachment_fields,
                 "actions": [
                     {
                       "type": "button",
