@@ -161,6 +161,9 @@ def send_notification(message, region):
 def lambda_handler(event, context):
     print(json.dumps(event))
 
+    if event["detail-type"] != "ECS Task State Change":
+        return
+
     region = event["region"]
 
     message = message_formatter(event, region)
