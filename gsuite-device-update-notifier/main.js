@@ -1,11 +1,11 @@
-var MINIMUM_ANDROID_VERSION = new Date(2020, 0, 1);
-var ANDROID_LAST_UPDATE = new Date(2020, 0, 7);
+var MINIMUM_ANDROID_VERSION = new Date(2020, 1, 5);
+var ANDROID_LAST_UPDATE = new Date(2020, 1, 5);
 
-var MINIMUM_IOS_VERSION = splitOSVersion("13.3");
-var IOS_LAST_UPDATE = new Date(2019, 11, 10);
+var MINIMUM_IOS_VERSION = splitOSVersion("13.3.1");
+var IOS_LAST_UPDATE = new Date(2020, 0, 28);
 
-var MINIMUM_CHROMEOS_VERSION = splitOSVersion("79.0.3945.86");
-var CHROMEOS_LAST_UPDATE = new Date(2019, 11, 19);
+var MINIMUM_CHROMEOS_VERSION = splitOSVersion("80.0.3987.128");
+var CHROMEOS_LAST_UPDATE = new Date(2020, 2, 2);
 
 var ANDROID_OUTDATED_MESSAGE = "\
 Hello,\n\

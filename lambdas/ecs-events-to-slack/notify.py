@@ -72,10 +72,15 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
                         "short": "true"
                     },
                     {
+                        "title": "Image Digest",
+                        "value": event_detail["containers"][0]["imageDigest"],
+                        "short": "true",
+                    },
+                    {
                         "title": "Networking Status",
                         "value": attachment_status,
                         "short": "true"
-                    }
+                    },
                 ],
                 "actions": [
                     {
