@@ -31,6 +31,13 @@ def message_formatter(event, region):
     overrides = event_detail["overrides"]["containerOverrides"][0]
     container_name = overrides["name"]
 
+    if "command" in overrides:
+        command = overrides["command"]
+        command_formatted = " ".join(command)
+    else:
+        command_formatted = "Default"
+
+
     if "environment" in overrides:
         env_vars = overrides["environment"]
         excludes = get_excludes()
@@ -62,6 +69,11 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
             message_color = "danger"
 
     attachment_fields = [
+        {
+            "title": "Command",
+            "value": command_formatted,
+            "short": "true"
+        },
         {
             "title": "Environment Variables",
             "value": env_vars_formatted,
