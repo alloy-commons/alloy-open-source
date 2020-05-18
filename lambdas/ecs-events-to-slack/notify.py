@@ -69,11 +69,6 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
 
     attachment_fields = [
         {
-            "title": "Command",
-            "value": command_formatted,
-            "short": "true"
-        },
-        {
             "title": "Environment Variables",
             "value": env_vars_formatted,
             "short": "true"
