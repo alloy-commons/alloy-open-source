@@ -35,7 +35,7 @@ def message_formatter(event, region):
         command = overrides["command"]
         command_formatted = " ".join(command)
     else:
-        command_formatted = "Default"
+        command_formatted = None
 
     if "environment" in overrides:
         env_vars = overrides["environment"]
@@ -84,6 +84,12 @@ https://{reg}.console.aws.amazon.com/cloudwatch/home?region={reg}\
             "short": "true"
         },
     ]
+    if command_formatted:
+        attachment_fields.insert(0, {
+            "title": "Command",
+            "value": command_formatted,
+            "short": "true",
+        })
     if event_detail["containers"][0].get("imageDigest"):
         attachment_fields.append({
             "title": "Image Digest",
