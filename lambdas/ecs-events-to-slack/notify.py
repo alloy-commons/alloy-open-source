@@ -37,7 +37,6 @@ def message_formatter(event, region):
     else:
         command_formatted = "Default"
 
-
     if "environment" in overrides:
         env_vars = overrides["environment"]
         excludes = get_excludes()
