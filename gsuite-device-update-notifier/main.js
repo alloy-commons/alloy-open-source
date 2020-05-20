@@ -172,21 +172,25 @@ function emailOutdatedUsers(devices) {
     }
 
     var message;
+    var subject_type;
     switch (devices.results[i].type) {
       case "iOS":
         message = IOS_OUTDATED_MESSAGE;
+        subject_type = "iPhone";
         break;
       case "Android":
         message = ANDROID_OUTDATED_MESSAGE;
+        subject_type = "Android";
         break;
       case "ChromeOS":
         message = CHROMEOS_OUTDATED_MESSAGE;
+        subject_type = "ChromeBook";
         break;
     }
 
     MailApp.sendEmail({
       to: devices.results[i].name,
-      subject: "Outdated " + devices.results[i].type,
+      subject: "Outdated " + subject_type,
       body: message
     });
   }
