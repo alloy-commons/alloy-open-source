@@ -7,7 +7,7 @@ from botocore.exceptions import ClientError
 from dateutil.parser import parse
 
 
-ENV_SHORTCIRCUIT = "QUIET_NOTIFICATIONS"
+ENV_SHORTCIRCUIT = "SILENCE_NOTIFICATIONS"
 
 
 def get_excludes():
