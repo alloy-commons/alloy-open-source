@@ -7,6 +7,9 @@ from botocore.exceptions import ClientError
 from dateutil.parser import parse
 
 
+ENV_SHORTCIRCUIT = "QUIET_NOTIFICATIONS"
+
+
 def get_excludes():
     if "ENV_EXCLUDES" in os.environ:
         return os.environ["ENV_EXCLUDES"].replace(" ", "").split(",")
@@ -42,6 +45,9 @@ def message_formatter(event, region):
         excludes = get_excludes()
         env_vars_list = []
         for env_var in env_vars:
+            if env_var == ENV_SHORTCIRCUIT:
+                return
+
             if env_var["name"] in excludes:
                 env_var_formatted = "%s=\"REDACTED\"" % env_var["name"]
             else:
@@ -185,4 +191,5 @@ def lambda_handler(event, context):
     region = event["region"]
 
     message = message_formatter(event, region)
-    send_notification(message, region)
+    if message:
+        send_notification(message, region)
