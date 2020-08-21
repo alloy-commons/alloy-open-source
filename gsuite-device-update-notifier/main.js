@@ -4,13 +4,13 @@ var ANDROID_LAST_UPDATE = new Date(2020, 7, 4);
 var MINIMUM_IOS_VERSION = splitOSVersion("13.6");
 var IOS_LAST_UPDATE = new Date(2020, 6, 15);
 
-var MINIMUM_CHROMEOS_VERSION = splitOSVersion("84.0.4147.127");
-var CHROMEOS_LAST_UPDATE = new Date(2020, 7, 13);
+var MINIMUM_CHROMEOS_VERSION = splitOSVersion("84.0.4147.136");
+var CHROMEOS_LAST_UPDATE = new Date(2020, 7, 21);
 
 var ANDROID_OUTDATED_MESSAGE = "\
 Hello,\n\
 \n\
-It appears that you have an out of date Android on your device.\n\
+There is a new release of Android available for your phone.\n\
 \n\
 To update, follow the instructions here: https://support.google.com/android/answer/7680439\n\
 \n\
@@ -20,7 +20,7 @@ Thanks!";
 var IOS_OUTDATED_MESSAGE = "\
 Hello,\n\
 \n\
-It appears that you have an out of date iOS on your device.\n\
+There is a new release of iOS available for your phone.\n\
 \n\
 To update, follow the instructions here: https://support.apple.com/en-us/HT204204\n\
 \n\
@@ -30,7 +30,7 @@ Thanks!";
 var CHROMEOS_OUTDATED_MESSAGE = "\
 Hello,\n\
 \n\
-It appears that you have an out of date ChromeOS on your device.\n\
+There is a new release of available for your computer.\n\
 \n\
 To update, follow the instructions here: https://support.google.com/chromebook/answer/177889\n\
 \n\
