@@ -163,7 +163,7 @@ def send_notification(message, region):
     if slack_webhook_url is None:
         print("""Slack webhook url is not set. This means that
         SLACK_WEBHOOK_URL environment variable is not set or an error occured
-        when retriving the secret from secret manager""")
+        when retrieving the secret from secret manager""")
 
     req_data = json.dumps(message)
     req_headers = {"Content-type": "application/json"}
