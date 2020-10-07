@@ -105,7 +105,7 @@ function compareOSVersions(v1, v2) {
 }
 
 function checkOutdatedChromeOSDevice(device) {
-  if (!deive.osVersion) {
+  if (!device.osVersion) {
     return;
   }
   var version = splitOSVersion(device.osVersion);
