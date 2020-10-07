@@ -105,6 +105,9 @@ function compareOSVersions(v1, v2) {
 }
 
 function checkOutdatedChromeOSDevice(device) {
+  if (!deive.osVersion) {
+    return;
+  }
   var version = splitOSVersion(device.osVersion);
   if (compareOSVersions(version, MINIMUM_CHROMEOS_VERSION) < 0) {
     return {name: device.annotatedUser, version: device.osVersion, type: "ChromeOS"};
