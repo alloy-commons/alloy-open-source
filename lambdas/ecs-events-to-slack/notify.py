@@ -24,6 +24,7 @@ def message_formatter(event, region):
 
     event_detail = event["detail"]
     task_arn = event_detail["taskArn"]
+    # Taking UUID from last part of the ARN, in format arn:aws:ecs:us-east-2:667471847564:task/<cluster-name>/<UUID>
     task_id = task_arn.split("/")[2]
     version = event_detail["version"]
     attachment_status = event_detail["attachments"][0]["status"]
