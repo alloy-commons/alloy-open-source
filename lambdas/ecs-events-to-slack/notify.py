@@ -24,7 +24,7 @@ def message_formatter(event, region):
 
     event_detail = event["detail"]
     task_arn = event_detail["taskArn"]
-    task_id = task_arn.split("/")[1]
+    task_id = task_arn.split("/")[2]
     version = event_detail["version"]
     attachment_status = event_detail["attachments"][0]["status"]
 
