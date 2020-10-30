@@ -13,3 +13,4 @@ them more useful to you, we'd be delighted to receive contributions.
 - Terraform Modules:
   - [Amazon Certificate Manager](terraform-modules/acm/README.md)
   - [GSuite SAML Cognito](terraform-modules/gsuite-saml-cognito/README.md)
+- [ECS event notifications in Slack](lambdas/ecs-events-to-slack/README.md)
