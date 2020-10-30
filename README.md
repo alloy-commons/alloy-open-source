@@ -1,5 +1,7 @@
 # Alloy Open Source
 
+Build status: [![Alloy](https://circleci.com/gh/alloy-commons/alloy-open-source.svg?style=svg)](https://app.circleci.com/pipelines/github/alloy-commons/alloy-open-source?branch=master)
+
 This repository contains open source code that Alloy wants to share with the
 world, we hope you find it useful! All the code here is licensed under the BSD
 3-clause license.
