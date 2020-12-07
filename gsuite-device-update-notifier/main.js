@@ -4,8 +4,8 @@ var ANDROID_LAST_UPDATE = new Date(2020, 10, 3);
 var MINIMUM_IOS_VERSION = splitOSVersion("14.2");
 var IOS_LAST_UPDATE = new Date(2020, 10, 5);
 
-var MINIMUM_CHROMEOS_VERSION = splitOSVersion("86.0.4240.198");
-var CHROMEOS_LAST_UPDATE = new Date(2020, 10, 16);
+var MINIMUM_CHROMEOS_VERSION = splitOSVersion("87.0.4280.88");
+var CHROMEOS_LAST_UPDATE = new Date(2020, 11, 7);
 
 var ANDROID_OUTDATED_MESSAGE = "\
 Hello,\n\
