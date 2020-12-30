@@ -19,7 +19,7 @@ used with ALB's authentication support.
 - `relying_party_dns_names`: List of DNS names for all the services you'll be
   authenticating with this resource.
 
-Also requires a provider named `aws_us_east_1`, which is required for
+Also requires a provider named `aws.us-east-1`, which is required for
 provisioning an ACM certificate.
 
 ## Outputs
@@ -55,7 +55,7 @@ module "gsuite_saml_cognito" {
 
   providers = {
     aws           = aws
-    aws_us_east_1 = aws.us-east-1
+    aws.us-east-1 = aws.us-east-1
   }
 }
 ```
