@@ -11,10 +11,10 @@ resource "aws_acm_certificate" "cert" {
 resource "aws_route53_record" "website_cert_validation" {
   count = length(var.domain_names)
 
-  name    = aws_acm_certificate.cert.domain_validation_options[count.index].resource_record_name
-  type    = aws_acm_certificate.cert.domain_validation_options[count.index].resource_record_type
+  name    = element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_name, count.index)
+  type    = element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_type, count.index)
   zone_id = var.zone_id
-  records = [aws_acm_certificate.cert.domain_validation_options[count.index].resource_record_value]
+  records = [element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_value, count.index)]
   ttl     = 300
 }
 
