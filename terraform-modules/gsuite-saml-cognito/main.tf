@@ -1,3 +1,18 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
+provider aws {
+}
+
+provider aws {
+  alias = "us-east-1"
+}
+
 resource "aws_cognito_user_pool" "gsuite_saml" {
   name             = var.name
   alias_attributes = ["email"]
@@ -44,13 +59,13 @@ resource "aws_cognito_user_pool_client" "gsuite_saml" {
 }
 
 module "auth_domain_certificate" {
-  source = "git::https://github.com/alloy-commons/alloy-open-source//terraform-modules/acm?ref=deb6608af6d026983b0b32966c3616a75e417422"
+  source = "git::https://github.com/alloy-commons/alloy-open-source//terraform-modules/acm?ref=5315c4dd18eedf00bb16c3e82ff7e906a74ed63d"
 
   domain_names = [var.dns_name]
   zone_id      = var.zone_id
 
   providers = {
-    aws = aws_us_east_1
+    aws = aws.us-east-1
   }
 }
 
