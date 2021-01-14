@@ -6,9 +6,11 @@ terraform {
   }
 }
 
+// This is the default AWS provider used directly by this module.
 provider aws {
 }
 
+// This is the alternate AWS provider which is passed along for use by the auth_domain_certificate module.
 provider aws {
   alias = "us-east-1"
 }
