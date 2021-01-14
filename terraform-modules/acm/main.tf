@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_acm_certificate" "cert" {
   domain_name               = var.domain_names[0]
   subject_alternative_names = slice(var.domain_names, 1, length(var.domain_names))
